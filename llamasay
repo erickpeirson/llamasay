@@ -1,9 +1,9 @@
 #!/usr/bin/perl
 
 ##
-## Cowsay 3.03
+## llamasay 3.03
 ##
-## This file is part of cowsay.  (c) 1999-2000 Tony Monroe.
+## This file is part of llamasay.  (c) 1999-2000 Tony Monroe.
 ##
 
 use Text::Tabs qw(expand);
@@ -16,7 +16,7 @@ $version = "3.03";
 $progname = basename($0);
 $eyes = "oo";
 $tongue = "  ";
-$cowpath = $ENV{'COWPATH'} || '/usr/local/share/cows';
+$llamapath = $ENV{'llamaPATH'} || '/usr/local/share/llamas';
 @message = ();
 $thoughts = "";
 
@@ -37,7 +37,7 @@ if (($^O eq "MSWin32") or ($^O eq "Windows_NT")) {	## Many perls, eek!
 
 %opts = (
     'e'		=>	'oo',
-    'f'		=>	'default.cow',
+    'f'		=>	'default.llama',
     'n'		=>	0,
     'T'		=>	'  ',
     'W'		=>	40,
@@ -46,7 +46,7 @@ if (($^O eq "MSWin32") or ($^O eq "Windows_NT")) {	## Many perls, eek!
 getopts('bde:f:ghlLnNpstT:wW:y', \%opts);
 
 &display_usage if $opts{'h'};
-&list_cowfiles if $opts{'l'};
+&list_llamafiles if $opts{'l'};
 
 $borg = $opts{'b'};
 $dead = $opts{'d'};
@@ -58,7 +58,7 @@ $wired = $opts{'w'};
 $young = $opts{'y'};
 $eyes = substr($opts{'e'}, 0, 2);
 $tongue = substr($opts{'T'}, 0, 2);
-$the_cow = "";
+$the_llama = "";
 
 &slurp_input;
 $Text::Wrap::columns = $opts{'W'};
@@ -66,23 +66,23 @@ $Text::Wrap::columns = $opts{'W'};
 	    split("\n", fill("", "", @message)));
 &construct_balloon;
 &construct_face;
-&get_cow;
+&get_llama;
 print @balloon_lines;
-print $the_cow;
+print $the_llama;
 
-sub list_cowfiles {
+sub list_llamafiles {
     my $basedir;
     my @dirfiles;
     chop($basedir = cwd);
-    for my $d (split(/$pathsep/, $cowpath)) {
-	print "Cow files in $d:\n";
-	opendir(COWDIR, $d) || die "$0: Cannot open $d\n";
-	for my $file (readdir COWDIR) {
-	    if ($file =~ s/\.cow$//) {
+    for my $d (split(/$pathsep/, $llamapath)) {
+	print "llama files in $d:\n";
+	opendir(llamaDIR, $d) || die "$0: Cannot open $d\n";
+	for my $file (readdir llamaDIR) {
+	    if ($file =~ s/\.llama$//) {
 		push(@dirfiles, $file);
 	    }
 	}
-	closedir(COWDIR);
+	closedir(llamaDIR);
 	print wrap("", "", sort @dirfiles), "\n";
 	@dirfiles = ();
 	chdir($basedir);
@@ -151,27 +151,27 @@ sub construct_face {
     if ($young) { $eyes = ".."; }
 }
 
-sub get_cow {
+sub get_llama {
 ##
-## Get a cow from the specified cowfile; otherwise use the default cow
-## which was defined above in $the_cow.
+## Get a llama from the specified llamafile; otherwise use the default llama
+## which was defined above in $the_llama.
 ##
     my $f = $opts{'f'};
     my $full = "";
     if ($opts{'f'} =~ m,/,) {
 	$full = $opts{'f'};
     } else {
-	for my $d (split(/:/, $cowpath)) {
+	for my $d (split(/:/, $llamapath)) {
 	    if (-f "$d/$f") {
 		$full = "$d/$f";
 		last;
-	    } elsif (-f "$d/$f.cow") {
-		$full = "$d/$f.cow";
+	    } elsif (-f "$d/$f.llama") {
+		$full = "$d/$f.llama";
 		last;
 	    }
 	}
 	if ($full eq "") {
-	    die "$progname: Could not find $f cowfile!\n";
+	    die "$progname: Could not find $f llamafile!\n";
 	}
     }
     do $full;
@@ -180,8 +180,8 @@ sub get_cow {
 
 sub display_usage {
 	die <<EOF;
-cow{say,think} version $version, (c) 1999 Tony Monroe
-Usage: $progname [-bdgpstwy] [-h] [-e eyes] [-f cowfile] 
+llama{say,think} version $version, (c) 1999 Tony Monroe
+Usage: $progname [-bdgpstwy] [-h] [-e eyes] [-f llamafile] 
           [-l] [-n] [-T tongue] [-W wrapcolumn] [message]
 EOF
 }
